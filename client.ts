@@ -17,6 +17,7 @@ const main = async () => {
     name: "Ethan",
     lastName: undefined,
   })
+  console.log("result", result)
 }
 
 main()

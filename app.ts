@@ -5,9 +5,10 @@ import {
 } from "./compiled_proto/example"
 
 const exampleServiceImpl: ExampleServiceImplementation = {
-  greeter: async (input) => {
+  greeter: async (message) => {
+    const { name, lastName } = message
     return {
-      greeting: `Hey ${input.name}`,
+      greeting: `hey ${[name, lastName].join(" ")}`,
     }
   },
 }
