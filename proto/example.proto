@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package example;
+
+service ExampleService {
+  // Unary RPC method for greeting
+  rpc Greeter (GreeterRequest) returns (GreeterResponse);
+}
+
+message GreeterRequest {
+  string name = 1;
+  optional string last_name = 2;
+}
+
+message GreeterResponse {
+  string greeting = 1;
+}
