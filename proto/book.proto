@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package book;
+
+service BookService {
+  // Unary RPC method for greeting
+  rpc GetBooks (BookRequest) returns (stream Book);
+}
+
+message Book {
+  string author = 1;
+  string title = 2;
+}
+
+message BookRequest {}
