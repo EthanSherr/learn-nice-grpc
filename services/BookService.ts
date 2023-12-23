@@ -1,4 +1,4 @@
-import { Book, BookServiceImplementation } from "../compiled_proto/book"
+import { BookServiceImplementation } from "../compiled_proto/book"
 
 export const bookServiceImpl: BookServiceImplementation = {
   getBooks: async function* (_) {
