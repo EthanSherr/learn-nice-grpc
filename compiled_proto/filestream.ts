@@ -1,6 +1,7 @@
 /* eslint-disable */
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import * as _m0 from "protobufjs/minimal";
+import Long = require("long");
 
 export const protobufPackage = "filestream";
 
@@ -19,6 +20,7 @@ export interface FileChunk {
 export interface FileMetadata {
   filename: string;
   mimeType: string;
+  fileSize: number;
 }
 
 function createBaseFileRequest(): FileRequest {
@@ -187,7 +189,7 @@ export const FileChunk = {
 };
 
 function createBaseFileMetadata(): FileMetadata {
-  return { filename: "", mimeType: "" };
+  return { filename: "", mimeType: "", fileSize: 0 };
 }
 
 export const FileMetadata = {
@@ -197,6 +199,9 @@ export const FileMetadata = {
     }
     if (message.mimeType !== "") {
       writer.uint32(18).string(message.mimeType);
+    }
+    if (message.fileSize !== 0) {
+      writer.uint32(24).uint64(message.fileSize);
     }
     return writer;
   },
@@ -222,6 +227,13 @@ export const FileMetadata = {
 
           message.mimeType = reader.string();
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.fileSize = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -235,6 +247,7 @@ export const FileMetadata = {
     return {
       filename: isSet(object.filename) ? globalThis.String(object.filename) : "",
       mimeType: isSet(object.mimeType) ? globalThis.String(object.mimeType) : "",
+      fileSize: isSet(object.fileSize) ? globalThis.Number(object.fileSize) : 0,
     };
   },
 
@@ -246,6 +259,9 @@ export const FileMetadata = {
     if (message.mimeType !== "") {
       obj.mimeType = message.mimeType;
     }
+    if (message.fileSize !== 0) {
+      obj.fileSize = Math.round(message.fileSize);
+    }
     return obj;
   },
 };
@@ -255,7 +271,6 @@ export const FileServiceDefinition = {
   name: "FileService",
   fullName: "filestream.FileService",
   methods: {
-    /** rpc GetFileFake (FileRequest) returns (stream FileResponse); */
     getFile: {
       name: "GetFile",
       requestType: FileRequest,
@@ -268,12 +283,10 @@ export const FileServiceDefinition = {
 } as const;
 
 export interface FileServiceImplementation<CallContextExt = {}> {
-  /** rpc GetFileFake (FileRequest) returns (stream FileResponse); */
   getFile(request: FileRequest, context: CallContext & CallContextExt): ServerStreamingMethodResult<FileResponse>;
 }
 
 export interface FileServiceClient<CallOptionsExt = {}> {
-  /** rpc GetFileFake (FileRequest) returns (stream FileResponse); */
   getFile(request: FileRequest, options?: CallOptions & CallOptionsExt): AsyncIterable<FileResponse>;
 }
 
@@ -300,6 +313,18 @@ function base64FromBytes(arr: Uint8Array): string {
     });
     return globalThis.btoa(bin.join(""));
   }
+}
+
+function longToNumber(long: Long): number {
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

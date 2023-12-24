@@ -3,7 +3,6 @@ syntax = "proto3";
 package filestream;
 
 service FileService {
-//  rpc GetFileFake (FileRequest) returns (stream FileResponse);
   rpc GetFile (FileRequest) returns (stream FileResponse);
 }
 
@@ -25,4 +24,5 @@ message FileChunk {
 message FileMetadata {
   string filename = 1;
   string mime_type = 2;
+  uint64 file_size = 3;
 }
