@@ -1,5 +1,4 @@
 import { createChannel, createClient } from "nice-grpc"
-import { ExampleServiceClient } from "../compiled_proto/example"
 import {
   BookServiceClient,
   BookServiceDefinition,

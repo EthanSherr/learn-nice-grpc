@@ -2,7 +2,6 @@ import { createChannel, createClient } from "nice-grpc"
 import {
   ExampleServiceClient,
   ExampleServiceDefinition,
-  GreeterRequest,
 } from "../compiled_proto/example"
 
 const channel = createChannel("localhost:8090")
