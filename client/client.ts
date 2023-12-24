@@ -3,7 +3,7 @@ import {
   ExampleServiceClient,
   ExampleServiceDefinition,
   GreeterRequest,
-} from "./compiled_proto/example"
+} from "../compiled_proto/example"
 
 const channel = createChannel("localhost:8090")
 

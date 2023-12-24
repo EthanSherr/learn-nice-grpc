@@ -3,6 +3,7 @@ syntax = "proto3";
 package filestream;
 
 service FileService {
+//  rpc GetFileFake (FileRequest) returns (stream FileResponse);
   rpc GetFile (FileRequest) returns (stream FileResponse);
 }
 

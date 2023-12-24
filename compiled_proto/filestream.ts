@@ -9,8 +9,7 @@ export interface FileRequest {
 }
 
 export interface FileResponse {
-  chunk?: FileChunk | undefined;
-  metadata?: FileMetadata | undefined;
+  response?: { $case: "chunk"; chunk: FileChunk } | { $case: "metadata"; metadata: FileMetadata } | undefined;
 }
 
 export interface FileChunk {
@@ -71,16 +70,18 @@ export const FileRequest = {
 };
 
 function createBaseFileResponse(): FileResponse {
-  return { chunk: undefined, metadata: undefined };
+  return { response: undefined };
 }
 
 export const FileResponse = {
   encode(message: FileResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.chunk !== undefined) {
-      FileChunk.encode(message.chunk, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.metadata !== undefined) {
-      FileMetadata.encode(message.metadata, writer.uint32(18).fork()).ldelim();
+    switch (message.response?.$case) {
+      case "chunk":
+        FileChunk.encode(message.response.chunk, writer.uint32(10).fork()).ldelim();
+        break;
+      case "metadata":
+        FileMetadata.encode(message.response.metadata, writer.uint32(18).fork()).ldelim();
+        break;
     }
     return writer;
   },
@@ -97,14 +98,14 @@ export const FileResponse = {
             break;
           }
 
-          message.chunk = FileChunk.decode(reader, reader.uint32());
+          message.response = { $case: "chunk", chunk: FileChunk.decode(reader, reader.uint32()) };
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.metadata = FileMetadata.decode(reader, reader.uint32());
+          message.response = { $case: "metadata", metadata: FileMetadata.decode(reader, reader.uint32()) };
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -117,18 +118,21 @@ export const FileResponse = {
 
   fromJSON(object: any): FileResponse {
     return {
-      chunk: isSet(object.chunk) ? FileChunk.fromJSON(object.chunk) : undefined,
-      metadata: isSet(object.metadata) ? FileMetadata.fromJSON(object.metadata) : undefined,
+      response: isSet(object.chunk)
+        ? { $case: "chunk", chunk: FileChunk.fromJSON(object.chunk) }
+        : isSet(object.metadata)
+        ? { $case: "metadata", metadata: FileMetadata.fromJSON(object.metadata) }
+        : undefined,
     };
   },
 
   toJSON(message: FileResponse): unknown {
     const obj: any = {};
-    if (message.chunk !== undefined) {
-      obj.chunk = FileChunk.toJSON(message.chunk);
+    if (message.response?.$case === "chunk") {
+      obj.chunk = FileChunk.toJSON(message.response.chunk);
     }
-    if (message.metadata !== undefined) {
-      obj.metadata = FileMetadata.toJSON(message.metadata);
+    if (message.response?.$case === "metadata") {
+      obj.metadata = FileMetadata.toJSON(message.response.metadata);
     }
     return obj;
   },
@@ -251,6 +255,7 @@ export const FileServiceDefinition = {
   name: "FileService",
   fullName: "filestream.FileService",
   methods: {
+    /** rpc GetFileFake (FileRequest) returns (stream FileResponse); */
     getFile: {
       name: "GetFile",
       requestType: FileRequest,
@@ -263,10 +268,12 @@ export const FileServiceDefinition = {
 } as const;
 
 export interface FileServiceImplementation<CallContextExt = {}> {
+  /** rpc GetFileFake (FileRequest) returns (stream FileResponse); */
   getFile(request: FileRequest, context: CallContext & CallContextExt): ServerStreamingMethodResult<FileResponse>;
 }
 
 export interface FileServiceClient<CallOptionsExt = {}> {
+  /** rpc GetFileFake (FileRequest) returns (stream FileResponse); */
   getFile(request: FileRequest, options?: CallOptions & CallOptionsExt): AsyncIterable<FileResponse>;
 }
 

@@ -1,6 +1,4 @@
-import {
-  ExampleServiceImplementation,
-} from "../compiled_proto/example"
+import { ExampleServiceImplementation } from "../../compiled_proto/example"
 
 export const exampleServiceImpl: ExampleServiceImplementation = {
   greeter: async (message) => {

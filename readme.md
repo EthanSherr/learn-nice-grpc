@@ -40,10 +40,12 @@ The `pnpm protos script` is running the following from grpc_tools_node_protoc, u
 pnpm grpc_tools_node_protoc \
   --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto \
   --ts_proto_out=./compiled_proto \
-  --ts_proto_opt=outputServices=nice-grpc,outputServices=generic-definitions,useExactTypes=true,outputPartialMethods=false \
+  --ts_proto_opt=outputServices=nice-grpc,outputServices=generic-definitions,useExactTypes=true,outputPartialMethods=false,oneof=unions \
   --proto_path=./proto   ./proto/example.proto
 ```
 
 ### I like these ts_proto_opts because...
 
 the ts_proto_opts can be found [here in the ts-proto readme](https://github.com/stephenh/ts-proto), but I really like `useExactTypes=true` and `outputPartialMethods=false`. useExactTypes controls whether the service implementation is returning a deep partial of the response message, and outputPartialMethods controls whether or not the inputs messages (in clients) are deep partials. In both cases I prefer not dealing with DeepPartials because it's just easier to understand. Without it you will be fine if you only return {} from a service returning {name: string} - but there will be a default "" value, it will come out like {name: ""}. this is probably good nough, and could still happen! I just don't like all the deep partials. Makes it confusing on the clientside and serviec side; is the property required? or optional?
+
+### You'll need to put ./server/files/sample.mp4 To use the file client

@@ -1,11 +1,9 @@
 import { createServer } from "nice-grpc"
-import {
-  ExampleServiceDefinition,
-} from "./compiled_proto/example"
-import { BookServiceDefinition } from "./compiled_proto/book"
+import { ExampleServiceDefinition } from "../compiled_proto/example"
+import { BookServiceDefinition } from "../compiled_proto/book"
 import { exampleServiceImpl } from "./services/ExampleService"
 import { bookServiceImpl } from "./services/BookService"
-import { FileServiceDefinition } from "./compiled_proto/filestream"
+import { FileServiceDefinition } from "../compiled_proto/filestream"
 import { fileServiceImpl } from "./services/FilestreamService"
 
 const main = async () => {
